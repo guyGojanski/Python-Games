@@ -48,6 +48,9 @@ class GameController:
         self.check_finish()
 
     def reset_game(self):
+        if hasattr(self, "ui"):
+            self.ui.stop_animation()
+
         self.chosen_word = random.choice(word_list)
         self.word_print = ["_" for _ in self.chosen_word]
         self.tries = 6

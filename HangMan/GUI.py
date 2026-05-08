@@ -9,7 +9,7 @@ class HangmanGUI:
     def __init__(self, root, guess_callback):
         self.root = root
         self.guess_callback = guess_callback
-
+        self.animation_running = False
         self.root.title("Hangman Pro")
         self.root.geometry("1200x800")
         self.root.resizable(False, False)
@@ -147,11 +147,15 @@ class HangmanGUI:
             self.root.destroy()
 
     def show_celebration(self, title, message, sound_file, restart_callback):
+        self.animation_running = True
         pygame.mixer.init()
         base_path = os.path.dirname(__file__)
         full_path = os.path.join(base_path, sound_file)
-        pygame.mixer.music.load(sound_file)
-        pygame.mixer.music.play()
+        try:
+            pygame.mixer.music.load(full_path)
+            pygame.mixer.music.play()
+        except pygame.error as e:
+            print(f"Error loading sound: {e}")
 
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -199,14 +203,24 @@ class HangmanGUI:
         self.animate_confetti()
 
     def animate_confetti(self):
+        if not self.animation_running:
+            return
+
         for p in self.particles:
             p["y"] += p["speed"]
             if p["y"] > 800:
                 p["y"] = -20
                 p["x"] = random.randint(0, 1200)
 
-            self.celebration_canvas.coords(
-                p["id"], p["x"], p["y"], p["x"] + 10, p["y"] + 10
-            )
+            try:
+                self.celebration_canvas.coords(
+                    p["id"], p["x"], p["y"], p["x"] + 10, p["y"] + 10
+                )
+            except tk.TclError:
+                self.animation_running = False
+                return
 
         self.root.after(30, self.animate_confetti)
+
+    def stop_animation(self):
+        self.animation_running = False
