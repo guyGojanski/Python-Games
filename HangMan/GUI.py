@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 import pygame
+import os
 
 
 class HangmanGUI:
@@ -147,6 +148,8 @@ class HangmanGUI:
 
     def show_celebration(self, title, message, sound_file, restart_callback):
         pygame.mixer.init()
+        base_path = os.path.dirname(__file__)
+        full_path = os.path.join(base_path, sound_file)
         pygame.mixer.music.load(sound_file)
         pygame.mixer.music.play()
 
