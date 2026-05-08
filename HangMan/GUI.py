@@ -6,9 +6,10 @@ import os
 
 
 class HangmanGUI:
-    def __init__(self, root, guess_callback):
+    def __init__(self, root, guess_callback, help_callback):
         self.root = root
         self.guess_callback = guess_callback
+        self.help_callback = help_callback
         self.animation_running = False
         self.root.title("Hangman Pro")
         self.root.geometry("1200x800")
@@ -90,6 +91,22 @@ class HangmanGUI:
         )
         self.guess_btn.pack(side="left")
 
+        self.help_btn = tk.Button(
+            self.card,
+            text="HELP (Lose 1 Life)",
+            command=self.on_help,
+            bg="#343a57",
+            fg="#f5a524",
+            font=("Arial", 12, "bold"),
+            activebackground="#ffd166",
+            activeforeground="#1c2030",
+            padx=16,
+            pady=6,
+            relief="flat",
+            cursor="hand2",
+        )
+        self.help_btn.pack(pady=(5, 15))
+
         self.tip_label = tk.Label(
             self.card,
             text="One letter only. Press Enter to submit.",
@@ -121,6 +138,10 @@ class HangmanGUI:
             pady=8,
         )
         self.used_label.pack()
+
+    def on_help(self):
+        if hasattr(self, "help_callback"):
+            self.help_callback()
 
     def on_guess(self):
         char = self.entry.get()

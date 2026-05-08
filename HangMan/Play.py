@@ -9,8 +9,6 @@ class GameController:
     def __init__(self):
         self.root = tk.Tk()
         self.reset_game()
-        print(f"Test Mode - The word is: {self.chosen_word}")  # for debug
-
         self.root.mainloop()
 
     def handle_guess(self, char):
@@ -52,6 +50,8 @@ class GameController:
             self.ui.stop_animation()
 
         self.chosen_word = random.choice(word_list)
+        print(f"Test Mode - The word is: {self.chosen_word}")  # for debug
+
         self.word_print = ["_" for _ in self.chosen_word]
         self.tries = 6
         self.guessed = []
@@ -59,9 +59,25 @@ class GameController:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.ui = HangmanGUI(self.root, self.handle_guess)
+        self.ui = HangmanGUI(self.root, self.handle_guess, self.handle_help)
         self.ui.update_word(self.word_print)
         self.ui.update_canvas(stages[self.tries])
+
+    def handle_help(self):
+        if self.tries <= 2:
+            self.ui.display_message(
+                "Too Risky!", "You don't have enough lives for a hint!", game_over=False
+            )
+            return
+
+        remaining_letters = [l for l in self.chosen_word if l not in self.guessed]
+
+        if remaining_letters:
+            random_hint = random.choice(remaining_letters)
+            self.tries -= 1
+            self.handle_guess(random_hint)
+            self.ui.update_canvas(stages[self.tries])
+            self.ui.update_stats(self.tries, self.guessed)
 
     def check_finish(self):
         if "_" not in self.word_print:
