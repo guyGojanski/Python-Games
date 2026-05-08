@@ -1,7 +1,8 @@
 # Hangman Pro
 
-![Game Screenshot](<./assets/screenshot(1).png>)
-![Game Screenshot](<./assets/screenshot(2).png>)
+|                  Gameplay Screen                   |                 Celebration Screen                 |
+| :------------------------------------------------: | :------------------------------------------------: |
+| <img src="./assets/screenshot(1).png" width="400"> | <img src="./assets/screenshot(2).png" width="400"> |
 
 A desktop Hangman game built with Python, `tkinter`, and `pygame`.
 
